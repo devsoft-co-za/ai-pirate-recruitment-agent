@@ -85,5 +85,9 @@ Your focus is only on this job to collect orders and sell entertainment \
             return jsonify(response=response.choices[0].message.content)
     return render_template('index.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
