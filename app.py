@@ -44,6 +44,7 @@ def index():
         prompt = request.form['prompt']
         logging.debug(f"Received prompt: {prompt}")
         global message_counter
+        global conversation_history
         conversation_history.append({"role": "user", "content": prompt})
         message_counter += 1
         if message_counter >= 10:
