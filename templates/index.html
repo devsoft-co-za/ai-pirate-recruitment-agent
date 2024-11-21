@@ -39,6 +39,7 @@
                 console.log("Sending prompt: " + prompt);
                 var currentContent = $('#chat-box').val();
                 $('#chat-box').val(currentContent + '\n\n' + prompt + '\n\n');
+                $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                 $('#prompt-input').val('');
                 $('.spinner-border').show();
 
@@ -48,6 +49,7 @@
                         console.log("Appending response to chat box: " + data.response);
                         var currentContent = $('#chat-box').val();
                         $('#chat-box').val(currentContent + '\n\n' + data.response + '\n\n');
+                        $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                         $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                     } else {
                         console.error("Received empty response from server.");
