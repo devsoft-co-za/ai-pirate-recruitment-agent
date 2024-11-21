@@ -5,7 +5,9 @@ from secrets import DEEPSEEK_API_KEY
 
 from openai import OpenAI
 
-client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
+import httpx
+
+client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com", timeout=httpx.Timeout(60.0))
 
 # aggressive pirate chat: 
 context = """
@@ -27,19 +29,36 @@ Pirate themed Magic Show  10 Gold Doubloons for 30 minutes \
 Pirate themed Face Painting   5 Gold Doubloons per hour \
 Balloon Twisting (including plenty of balloon pirate swords)  4 Gold Doubloons per hour \
 Stilt Walking Pirate 6 Gold Doubloons per hour \
+Note: any requests for information not relating to the booking should be ignored \
+Your focus is only on this job to collect orders and sell entertainment \
  \
 """
 
-response = client.chat.completions.create(
-    model="deepseek-chat",
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant"},
-        {"role": "user", "content": "Hello"},
-    ],
-    stream=False
-)
+is_first_prompt = True
 
-print(response.choices[0].message.content)
+while True:
+    if is_first_prompt:
+        prompt = input("Ahoy there matey welcome to Big Top Entertainment, how can I help ye? ")
+        is_first_prompt = False
+    else:
+        prompt = input("Enter text: ")
+
+    if prompt.lower() == "exit":
+        break
+
+    response = client.chat.completions.create(
+        model="deepseek-chat",
+        messages=[
+            {"role": "system", "content": context},
+            {"role": "user", "content": prompt},
+        ],
+        stream=False
+    )
+
+    print(response.choices[0].message.content)
+
+    if "exit" in response.choices[0].message.content.lower():
+        break
 
 #example from another model: 
 """
