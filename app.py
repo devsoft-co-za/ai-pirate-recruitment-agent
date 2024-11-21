@@ -20,6 +20,7 @@ def index():
         logging.debug(f"Received prompt: {prompt}")
         
         session_id = session.get('session_id')
+        counter = session.get('counter', 0)
         if not session_id:
             session_id = str(uuid.uuid4())
             session['session_id'] = session_id
@@ -47,11 +48,13 @@ Your focus is only on this job to collect orders and sell entertainment \
  \
 """}
             ]
+            session['counter'] = 0
         
         conversation_history = session['conversation_history']
         conversation_history.append({"role": "user", "content": prompt})
+        session['counter'] = counter + 1
         
-        if len(conversation_history) >= 10:
+        if session['counter'] >= 10:
             conversation_history = [
                 {"role": "system", "content": """
 You are a pirate who has been hired to collect orders for Big Top Entertainment, a South African entertainment company. \
@@ -76,6 +79,7 @@ Your focus is only on this job to collect orders and sell entertainment \
  \
 """}
             ]
+            session['counter'] = 0
             return jsonify(response="Arrr, scuse me, I got to get to me hammock - it be pirate siesta time!")
         else:
             response = client.chat.completions.create(
