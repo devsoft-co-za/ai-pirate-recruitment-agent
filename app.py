@@ -73,7 +73,7 @@ Your focus is only on this job to collect orders and sell entertainment \
 """}
             ]
             message_counter = 0
-            return jsonify(response="I got to get to me bunk")
+            return jsonify(response="Arrr, scuse me, I got to get to me hammock - it be pirate siesta time!")
         else:
             response = client.chat.completions.create(
                 model="deepseek-chat",
