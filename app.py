@@ -1,15 +1,12 @@
+from flask import Flask, render_template, request, jsonify
 from api_secrets import DEEPSEEK_API_KEY
-
-
-# Please install OpenAI SDK first: `pip3 install openai`
-
 from openai import OpenAI
-
 import httpx
+
+app = Flask(__name__)
 
 client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com", timeout=httpx.Timeout(60.0))
 
-# aggressive pirate chat: 
 context = """
 role:system, content: \
 You are a pirate who has been hired to collect orders for Big Top Entertainment, a South African entertainment company. \
@@ -34,49 +31,20 @@ Your focus is only on this job to collect orders and sell entertainment \
  \
 """
 
-is_first_prompt = True
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        prompt = request.form['prompt']
+        response = client.chat.completions.create(
+            model="deepseek-chat",
+            messages=[
+                {"role": "system", "content": context},
+                {"role": "user", "content": prompt},
+            ],
+            stream=False
+        )
+        return jsonify(response=response.choices[0].message.content)
+    return render_template('index.html')
 
-while True:
-    if is_first_prompt:
-        prompt = input("Ahoy there matey welcome to Big Top Entertainment, how can I help ye? ")
-        is_first_prompt = False
-    else:
-        prompt = input("Enter text: ")
-
-    if prompt.lower() == "exit":
-        break
-
-    response = client.chat.completions.create(
-        model="deepseek-chat",
-        messages=[
-            {"role": "system", "content": context},
-            {"role": "user", "content": prompt},
-        ],
-        stream=False
-    )
-
-    print(response.choices[0].message.content)
-
-    if "exit" in response.choices[0].message.content.lower():
-        break
-
-#example from another model: 
-"""
-is_first_prompt = True
-prompt = ""
-
-while True:
-    if is_first_prompt:
-        prompt = input("Ahoy there matey welcome to Big Top Entertainment, how can I help ye? ")
-        is_first_prompt = False
-    else:
-        prompt = input("Enter text: ")
-
-    if prompt.lower() == "exit":
-        break
-
-    response, context = collect_messages(prompt, context)
-
-    if response.lower() == "exit":
-        break
-"""
+if __name__ == '__main__':
+    app.run(debug=True)

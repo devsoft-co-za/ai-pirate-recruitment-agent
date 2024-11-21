@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Top Entertainment AI Pirate Booking Chatbot</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .spinner-border {
+            display: none;
+        }
+        .user-message {
+            color: blue;
+        }
+        .agent-message {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Big Top Entertainment AI Pirate Booking Chatbot</h1>
+        <div class="form-group">
+            <textarea id="chat-box" class="form-control" rows="10" readonly>Ahoy there matey welcome to Big Top Entertainment, how can I help ye?</textarea>
+        </div>
+        <div class="form-group">
+            <input type="text" id="prompt-input" class="form-control" placeholder="Enter your message">
+        </div>
+        <button id="send-button" class="btn btn-primary">Send</button>
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#send-button').click(function() {
+                sendMessage();
+            });
+
+            $('#prompt-input').keypress(function(event) {
+                if (event.keyCode === 13) {
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                var prompt = $('#prompt-input').val();
+                $('#chat-box').append('<div class="user-message">' + prompt + '</div>\n');
+                $('#prompt-input').val('');
+                $('.spinner-border').show();
+
+                $.post('/', {prompt: prompt}, function(data) {
+                    $('#chat-box').append('<div class="agent-message">' + data.response + '</div>\n');
+                    $('.spinner-border').hide();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
