@@ -47,12 +47,23 @@
 
             function sendMessage() {
                 var prompt = $('#prompt-input').val();
+                console.log("Sending prompt: " + prompt);
                 $('#chat-box').append('<div class="user-message">' + prompt + '</div>\n');
                 $('#prompt-input').val('');
                 $('.spinner-border').show();
 
                 $.post('/', {prompt: prompt}, function(data) {
-                    $('#chat-box').append('<div class="agent-message">' + data.response + '</div>\n');
+                    console.log("Received response: " + data.response);
+                    if (data.response) {
+                        console.log("Appending response to chat box: " + data.response);
+                        var currentContent = $('#chat-box').val();
+                        $('#chat-box').val(currentContent + '\n' + data.response);
+                    } else {
+                        console.error("Received empty response from server.");
+                    }
+                    $('.spinner-border').hide();
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error("Request failed: " + textStatus + ", " + errorThrown);
                     $('.spinner-border').hide();
                 });
             }

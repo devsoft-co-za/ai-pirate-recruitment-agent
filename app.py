@@ -31,10 +31,15 @@ Your focus is only on this job to collect orders and sell entertainment \
  \
 """
 
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         prompt = request.form['prompt']
+        logging.debug(f"Received prompt: {prompt}")
         response = client.chat.completions.create(
             model="deepseek-chat",
             messages=[
@@ -43,6 +48,7 @@ def index():
             ],
             stream=False
         )
+        logging.debug(f"API response: {response.choices[0].message.content}")
         return jsonify(response=response.choices[0].message.content)
     return render_template('index.html')
 
