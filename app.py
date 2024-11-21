@@ -48,13 +48,13 @@ Your focus is only on this job to collect orders and sell entertainment \
  \
 """}
             ]
-            session['counter'] = 0
+            session['counter'] = 1  # Initialize counter to 1 since the first message is already added
         
         conversation_history = session['conversation_history']
         conversation_history.append({"role": "user", "content": prompt})
-        session['counter'] = counter + 1
+        session['counter'] = counter + 1  # Increment counter correctly
         
-        if session['counter'] >= 10:
+        if session['counter'] > 10:  # Ensure the condition is correct
             conversation_history = [
                 {"role": "system", "content": """
 You are a pirate who has been hired to collect orders for Big Top Entertainment, a South African entertainment company. \
@@ -79,7 +79,7 @@ Your focus is only on this job to collect orders and sell entertainment \
  \
 """}
             ]
-            session['counter'] = 0
+            session['counter'] = 1  # Reset counter to 1 after resetting conversation history
             return jsonify(response="Arrr, scuse me, I got to get to me hammock - it be pirate siesta time!")
         else:
             response = client.chat.completions.create(
