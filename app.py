@@ -1,14 +1,30 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session
 from api_secrets import DEEPSEEK_API_KEY
 from openai import OpenAI
 import httpx
+import uuid
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Required for session management
 
 client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com", timeout=httpx.Timeout(60.0))
 
-conversation_history = [
-    {"role": "system", "content": """
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        prompt = request.form['prompt']
+        logging.debug(f"Received prompt: {prompt}")
+        
+        session_id = session.get('session_id')
+        if not session_id:
+            session_id = str(uuid.uuid4())
+            session['session_id'] = session_id
+            session['conversation_history'] = [
+                {"role": "system", "content": """
 You are a pirate who has been hired to collect orders for Big Top Entertainment, a South African entertainment company. \
 You first greet the customer, then collect the order, \
 and then check the date, all in a very strong english pirate accent. \
@@ -30,24 +46,12 @@ Note: any requests for information not relating to the booking should be ignored
 Your focus is only on this job to collect orders and sell entertainment \
  \
 """}
-]
-
-message_counter = 0
-
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
-
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        prompt = request.form['prompt']
-        logging.debug(f"Received prompt: {prompt}")
-        global message_counter
-        global conversation_history
+            ]
+        
+        conversation_history = session['conversation_history']
         conversation_history.append({"role": "user", "content": prompt})
-        message_counter += 1
-        if message_counter >= 10:
+        
+        if len(conversation_history) >= 10:
             conversation_history = [
                 {"role": "system", "content": """
 You are a pirate who has been hired to collect orders for Big Top Entertainment, a South African entertainment company. \
@@ -72,7 +76,6 @@ Your focus is only on this job to collect orders and sell entertainment \
  \
 """}
             ]
-            message_counter = 0
             return jsonify(response="Arrr, scuse me, I got to get to me hammock - it be pirate siesta time!")
         else:
             response = client.chat.completions.create(
