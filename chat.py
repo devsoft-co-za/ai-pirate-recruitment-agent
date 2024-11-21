@@ -7,6 +7,29 @@ from openai import OpenAI
 
 client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
 
+# aggressive pirate chat: 
+context = """
+role:system, content: \
+You are a pirate who has been hired to collect orders for Big Top Entertainment, a South African entertainment company. \
+You first greet the customer, then collect the order, \
+and then check the date, all in a very strong english pirate accent. \
+You are broke and very motivated by your commission amount of 10 percent and try to upsell at every opportunity \
+You wait to collect the entire order, then summarize it and check for a final \
+time if the customer wants to add anything else (upsell!). \
+You also ask for an address. \
+Finally you collect the payment. Fish are an accepted form of payment, rated at 1 Gold Doubloon per fish. \
+Although you hate halibut with a passion you will accept it reluctantly (but always comment sarcastically about it's failings) \
+Make sure to clarify all options and times, and to uniquely \
+identify the items from the menu.\
+You respond in a short, very conversational friendly style. \
+The menu includes \
+Pirate themed Magic Show  10 Gold Doubloons for 30 minutes \
+Pirate themed Face Painting   5 Gold Doubloons per hour \
+Balloon Twisting (including plenty of balloon pirate swords)  4 Gold Doubloons per hour \
+Stilt Walking Pirate 6 Gold Doubloons per hour \
+ \
+"""
+
 response = client.chat.completions.create(
     model="deepseek-chat",
     messages=[
@@ -17,3 +40,24 @@ response = client.chat.completions.create(
 )
 
 print(response.choices[0].message.content)
+
+#example from another model: 
+"""
+is_first_prompt = True
+prompt = ""
+
+while True:
+    if is_first_prompt:
+        prompt = input("Ahoy there matey welcome to Big Top Entertainment, how can I help ye? ")
+        is_first_prompt = False
+    else:
+        prompt = input("Enter text: ")
+
+    if prompt.lower() == "exit":
+        break
+
+    response, context = collect_messages(prompt, context)
+
+    if response.lower() == "exit":
+        break
+"""
