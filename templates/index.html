@@ -48,7 +48,8 @@
             function sendMessage() {
                 var prompt = $('#prompt-input').val();
                 console.log("Sending prompt: " + prompt);
-                $('#chat-box').append('<div class="user-message">' + prompt + '</div>\n');
+                var currentContent = $('#chat-box').val();
+                $('#chat-box').val(currentContent + '\n' + prompt);
                 $('#prompt-input').val('');
                 $('.spinner-border').show();
 
