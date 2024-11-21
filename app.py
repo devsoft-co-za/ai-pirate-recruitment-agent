@@ -7,8 +7,8 @@ app = Flask(__name__)
 
 client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com", timeout=httpx.Timeout(60.0))
 
-context = """
-role:system, content: \
+conversation_history = [
+    {"role": "system", "content": """
 You are a pirate who has been hired to collect orders for Big Top Entertainment, a South African entertainment company. \
 You first greet the customer, then collect the order, \
 and then check the date, all in a very strong english pirate accent. \
@@ -29,7 +29,8 @@ Stilt Walking Pirate 6 Gold Doubloons per hour \
 Note: any requests for information not relating to the booking should be ignored \
 Your focus is only on this job to collect orders and sell entertainment \
  \
-"""
+"""}
+]
 
 import logging
 
@@ -40,14 +41,13 @@ def index():
     if request.method == 'POST':
         prompt = request.form['prompt']
         logging.debug(f"Received prompt: {prompt}")
+        conversation_history.append({"role": "user", "content": prompt})
         response = client.chat.completions.create(
             model="deepseek-chat",
-            messages=[
-                {"role": "system", "content": context},
-                {"role": "user", "content": prompt},
-            ],
+            messages=conversation_history,
             stream=False
         )
+        conversation_history.append({"role": "assistant", "content": response.choices[0].message.content})
         logging.debug(f"API response: {response.choices[0].message.content}")
         return jsonify(response=response.choices[0].message.content)
     return render_template('index.html')
