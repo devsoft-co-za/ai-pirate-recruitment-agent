@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, jsonify, session
-from api_secrets import DEEPSEEK_API_KEY
+from api_secrets import DEEPSEEK_API_KEY, SESSION_SECRET_KEY
 from openai import OpenAI
 import httpx
 import uuid
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Required for session management
+app.secret_key = SESSION_SECRET_KEY  # Required for session management
 
 client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com", timeout=httpx.Timeout(60.0))
 
