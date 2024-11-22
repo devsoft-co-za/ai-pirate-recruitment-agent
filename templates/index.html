@@ -4,9 +4,9 @@
 
 {% block content %}
     <h1>AI Pirate Booking Chatbot</h1>
-    <p><i>Just for fun - from </i>Big Top Entertainment</p>
+    <p><i>Just for fun - from </i>DevSoft South Africa</p>
     <div class="form-group">
-        <textarea id="chat-box" class="form-control" rows="10" readonly>Ahoy there matey welcome to Big Top Entertainment, how can I help ye?</textarea>
+        <textarea id="chat-box" class="form-control" rows="10" readonly>Ahoy there matey welcome to Pirates Entertainment Agency, how can I help ye?</textarea>
     </div>
     <div class="form-group">
         <input type="text" id="prompt-input" class="form-control" placeholder="Enter your message">
@@ -55,7 +55,7 @@
                         console.error("Received empty response from server.");
                     }
                     if (data.response === "I got to get to me bunk") {
-                        $('#chat-box').val("Ahoy there matey welcome to Big Top Entertainment, how can I help ye?");
+                        $('#chat-box').val("Ahoy there matey welcome to Pirates Entertainment Agency, how can I help ye?");
                     }
                     $('.spinner-border').hide();
                 }).fail(function(jqXHR, textStatus, errorThrown) {
