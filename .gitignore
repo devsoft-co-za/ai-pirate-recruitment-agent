@@ -3,4 +3,7 @@ __pycache__/*
 secrets.py 
 .aider*
 .env
+env
+venv
+.venv
 api_secrets.py
