@@ -78,7 +78,7 @@ def index():
         # Call the API to get the assistant's response
         try:
             response = client.chat.completions.create(
-                model="deepseek-chat",
+                model="deepseek-reasoner",
                 messages=conversation_history,
                 stream=False
             )
