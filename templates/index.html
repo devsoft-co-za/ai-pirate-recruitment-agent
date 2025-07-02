@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Chat{% endblock %}
+{% block title %}Recruitment Chat{% endblock %}
 
 {% block content %}
-    <h1>AI Pirate Booking Chatbot</h1>
-    <p><i>Just for fun - from </i>DevSoft South Africa</p>
+    <h1>AI Pirate Recruitment Agent</h1>
+    <p><i>Ask about the candidate's skills and experience!</i></p>
     <div class="form-group">
-        <textarea id="chat-box" class="form-control" rows="10" readonly>Ahoy there matey welcome to Pirates Entertainment Agency, how can I help ye?</textarea>
+        <textarea id="chat-box" class="form-control" rows="10" readonly>Arrr! I be here to sing the praises of a mighty fine candidate. What ye want to know about their skills and experience?</textarea>
     </div>
     <div class="form-group">
         <input type="text" id="prompt-input" class="form-control" placeholder="Enter your message">
@@ -54,8 +54,8 @@
                     } else {
                         console.error("Received empty response from server.");
                     }
-                    if (data.response === "I got to get to me bunk") {
-                        $('#chat-box').val("Ahoy there matey welcome to Pirates Entertainment Agency, how can I help ye?");
+                    if (data.response === "I be needin' a grog break!") {
+                        $('#chat-box').val("Arrr! Fresh from the galley - ask about the candidate's talents!");
                     }
                     $('.spinner-border').hide();
                 }).fail(function(jqXHR, textStatus, errorThrown) {
