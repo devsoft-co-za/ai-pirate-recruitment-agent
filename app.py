@@ -4,11 +4,16 @@ from openai import OpenAI
 import httpx
 import uuid
 import logging
+import time
 
 app = Flask(__name__)
 app.secret_key = SESSION_SECRET_KEY  # Required for session management
 
-client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com", timeout=httpx.Timeout(60.0))
+client = OpenAI(
+    api_key=DEEPSEEK_API_KEY,
+    base_url="https://api.deepseek.com",
+    timeout=httpx.Timeout(120.0, read=120.0)  # Double the timeout values
+)
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -66,23 +71,36 @@ def index():
 
         # Call the API to get the assistant's response
         try:
-            response = client.chat.completions.create(
+            start_time = time.time()
+            logging.info(f"Starting API call at {start_time}")
+            
+            stream = client.chat.completions.create(
                 model="deepseek-reasoner",
                 messages=conversation_history,
-                stream=False
+                stream=True  # Enable streaming
             )
-            assistant_response = response.choices[0].message.content
-            logging.debug(f"API response: {assistant_response}")
+            
+            # Collect streamed response
+            assistant_response = []
+            for chunk in stream:
+                if chunk.choices[0].delta.content:
+                    assistant_response.append(chunk.choices[0].delta.content)
+            
+            full_response = ''.join(assistant_response)
+            
+            end_time = time.time()
+            logging.info(f"API call completed in {end_time - start_time:.2f} seconds")
+            logging.debug(f"API response: {full_response}")
 
             # Update conversation history with assistant's response
-            conversation_history.append({"role": "assistant", "content": assistant_response})
+            conversation_history.append({"role": "assistant", "content": full_response})
             
             # Save updated history and counter back to session
             session['conversation_history'] = conversation_history
             session.modified = True  # Ensure changes are saved
             
             logging.debug(f"Conversation History After API Call: {conversation_history}")
-            return jsonify(response=assistant_response)
+            return jsonify(response=full_response)
         except Exception as e:
             logging.error(f"Error during API call: {e}")
             return jsonify(response="Arrr, matey, there seems to be a problem with the parrot on me shoulder!")
