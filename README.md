@@ -13,22 +13,32 @@
 
 **Candidate Profile:**  
 Tom Hastings be a seasoned developer with:
-- 10+ years full-stack experience
-- Cloud architecture expertise (AWS/Azure)
+- 10+ years programming experience
+- Cloud architecture expertise (DigitalOcean/Google Cloud/Cloudflare)
 - IoT/embedded systems mastery
-- Technical leadership experience
+- AI coding experience
 
 **DevSoft Details:**  
 South African tech consultancy specializing in:
-- Enterprise web development
+- Full stack web development
 - IoT solutions
-- Cloud migrations
-- Technical recruitment systems
+- Cloud deployments
 
-## 2. Getting Started
+## 2. Configuration
+
+Create `api_secrets.py` with:
+```python
+DEEPSEEK_API_KEY = "your_api_key"
+SESSION_SECRET_KEY = "your_session_secret"
+resume_details = """
+[Candidate's resume details in markdown format]
+"""
+```
+
+## 3. Getting Started
 
 ### Requirements
-- Python 3.8+
+- Python 3.10+
 - [UV](https://github.com/astral-sh/uv) package manager
 - Deepseek API key
 
@@ -51,10 +61,6 @@ source .venv/bin/activate  # Linux/Mac
 # Install dependencies
 uv pip install -r requirements.txt
 
-# Set environment variables
-export DEEPSEEK_API_KEY='your-api-key'
-export SESSION_SECRET_KEY='your-secret-key'
-
 # Run development server
 flask run --host=0.0.0.0 --port=5000
 
@@ -63,16 +69,7 @@ uv pip install gunicorn
 gunicorn --bind 0.0.0.0:5000 wsgi:app
 ```
 
-## 3. Configuration
 
-Create `api_secrets.py` with:
-```python
-DEEPSEEK_API_KEY = "your_api_key"
-SESSION_SECRET_KEY = "your_session_secret"
-resume_details = """
-[Candidate's resume details in markdown format]
-"""
-```
 
 ## 4. Project Structure
 ```
