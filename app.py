@@ -101,6 +101,9 @@ def index():
             
             logging.debug(f"Conversation History After API Call: {conversation_history}")
             return jsonify(response=full_response)
+        except httpx.TimeoutException as e:
+            logging.error(f"API timeout: {e}")
+            return jsonify(response="Blimey! The DeepSeek parrot flew the coop 'fore squawkin' back! The seas be rough today - try again when the waves be calmer, matey!")
         except Exception as e:
             logging.error(f"Error during API call: {e}")
             return jsonify(response="Arrr, matey, there seems to be a problem with the parrot on me shoulder!")
