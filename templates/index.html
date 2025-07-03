@@ -60,6 +60,14 @@
                     $('.spinner-border').hide();
                 }).fail(function(jqXHR, textStatus, errorThrown) {
                     console.error("Request failed: " + textStatus + ", " + errorThrown);
+                    var errorMsg = "Parrot navigation failure! ";
+                    if (jqXHR.status === 502) {
+                        errorMsg += "Captain's log: Bad Gateway (check server ports)";
+                    } else if (jqXHR.status === 504) {
+                        errorMsg += "Parrot flew too far! Try again!";
+                    }
+                    var currentContent = $('#chat-box').val();
+                    $('#chat-box').val(currentContent + '\n\n' + errorMsg + '\n\n');
                     $('.spinner-border').hide();
                 });
             }

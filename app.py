@@ -102,11 +102,11 @@ def index():
             logging.debug(f"Conversation History After API Call: {conversation_history}")
             return jsonify(response=full_response)
         except httpx.TimeoutException as e:
-            logging.error(f"API timeout: {e}")
-            return jsonify(response="Blimey! The DeepSeek parrot flew the coop 'fore squawkin' back! The seas be rough today - try again when the waves be calmer, matey!")
+            logging.error(f"API timeout after {time.time() - start_time:.2f}s: {e}")
+            return jsonify(response="Blimey! The DeepSeek parrot flew the coop 'fore squawkin' back! Try again when the seas be calmer!"), 504  # Explicit 504 status
         except Exception as e:
-            logging.error(f"Error during API call: {e}")
-            return jsonify(response="Arrr, matey, there seems to be a problem with the parrot on me shoulder!")
+            logging.error(f"Critical error: {str(e)}")
+            return jsonify(response="Arrr! The ship's navigation charts be lost!"), 500
     
     return render_template('index.html')
 
