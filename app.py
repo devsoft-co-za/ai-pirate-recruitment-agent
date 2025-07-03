@@ -7,7 +7,8 @@ import logging
 import time
 
 app = Flask(__name__)
-app.secret_key = SESSION_SECRET_KEY  # Required for session management
+app.secret_key = SESSION_SECRET_KEY
+app.config['SESSION_TYPE'] = 'filesystem'  # Use server-side sessions instead of cookies
 
 client = OpenAI(
     api_key=DEEPSEEK_API_KEY,
@@ -92,8 +93,9 @@ def index():
             logging.info(f"API call completed in {end_time - start_time:.2f} seconds")
             logging.debug(f"API response: {full_response}")
 
-            # Update conversation history with assistant's response
+            # Update conversation history with assistant's response (keep only last 3 messages)
             conversation_history.append({"role": "assistant", "content": full_response})
+            conversation_history = conversation_history[-3:]  # Keep only last 3 exchanges
             
             # Save updated history and counter back to session
             session['conversation_history'] = conversation_history

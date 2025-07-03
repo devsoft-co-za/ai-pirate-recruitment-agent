@@ -48,7 +48,10 @@
                     if (data.response) {
                         console.log("Appending response to chat box: " + data.response);
                         var currentContent = $('#chat-box').val();
-                        $('#chat-box').val(currentContent + '\n\n' + data.response + '\n\n');
+                        // Ensure we only add new content that isn't already present
+                        if (!currentContent.includes(data.response)) {
+                            $('#chat-box').val(currentContent + '\n\n' + data.response + '\n\n');
+                        }
                         $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                         $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                     } else {
