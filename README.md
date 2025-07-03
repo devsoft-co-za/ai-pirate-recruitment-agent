@@ -33,6 +33,8 @@ SESSION_SECRET_KEY = "your_session_secret"
 resume_details = """
 [Candidate's resume details in markdown format]
 """
+
+Update html templates with your own details
 ```
 
 ## 3. Getting Started
