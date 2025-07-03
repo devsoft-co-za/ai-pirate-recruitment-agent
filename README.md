@@ -1,0 +1,95 @@
+# AI Pirate Recruitment Agent ⚓🤖
+
+## 1. About This Project
+
+**Avast ye!** This swashbuckling AI agent recruits for technical talent while maintaining pirate decorum. Developed by [DevSoft South Africa](https://devsoft.co.za) for showcasing candidate Tom Hastings' credentials.
+
+**Key Features:**
+- 🦜 Authentic pirate speech patterns ("Arrr!", "Matey!")
+- 📜 Resume-driven responses with project URLs
+- ⚔️ Aggressive candidate promotion strategy
+- 🌍 Web + CLI interfaces
+- 🔐 Secure session management
+
+**Candidate Profile:**  
+Tom Hastings be a seasoned developer with:
+- 10+ years full-stack experience
+- Cloud architecture expertise (AWS/Azure)
+- IoT/embedded systems mastery
+- Technical leadership experience
+
+**DevSoft Details:**  
+South African tech consultancy specializing in:
+- Enterprise web development
+- IoT solutions
+- Cloud migrations
+- Technical recruitment systems
+
+## 2. Getting Started
+
+### Requirements
+- Python 3.8+
+- [UV](https://github.com/astral-sh/uv) package manager
+- Deepseek API key
+
+### CLI Version
+```bash
+uv pip install -r requirements.txt
+python3 chat.py
+
+# First prompt:
+Arrr! Ready to hear about our stellar candidate, matey? What ye be wantin' to know?
+```
+
+### Web Version
+```bash
+# Create virtual environment
+uv venv .venv
+source .venv/bin/activate  # Linux/Mac
+# .venv\Scripts\activate  # Windows
+
+# Install dependencies
+uv pip install -r requirements.txt
+
+# Set environment variables
+export DEEPSEEK_API_KEY='your-api-key'
+export SESSION_SECRET_KEY='your-secret-key'
+
+# Run development server
+flask run --host=0.0.0.0 --port=5000
+
+# Production deployment
+uv pip install gunicorn
+gunicorn --bind 0.0.0.0:5000 wsgi:app
+```
+
+## 3. Configuration
+
+Create `api_secrets.py` with:
+```python
+DEEPSEEK_API_KEY = "your_api_key"
+SESSION_SECRET_KEY = "your_session_secret"
+resume_details = """
+[Candidate's resume details in markdown format]
+"""
+```
+
+## 4. Project Structure
+```
+├── app.py                 # Flask web application
+├── chat.py                # CLI interface
+├── requirements.txt       # Python dependencies
+├── api_secrets.py         # API credentials (gitignored)
+├── wsgi.py                # Production WSGI entry point
+└── templates/             # HTML templates
+    ├── base.html          # Master template
+    ├── index.html         # Chat interface
+    └── about.html         # Candidate details
+```
+
+## 5. License & Attribution
+- Developed by [DevSoft South Africa](https://devsoft.co.za)
+- Pirate speech patterns © Public Domain
+- UI components from Bootstrap 4
+
+*Shiver me timbers! This README be complete!* 🏴‍☠️
