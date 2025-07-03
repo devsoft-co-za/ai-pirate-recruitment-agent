@@ -6,7 +6,9 @@
     <h1>AI Pirate Recruitment Agent</h1>
     <p><i>Ask about the candidate's skills and experience!</i></p>
     <div class="form-group">
-        <textarea id="chat-box" class="form-control" rows="10" readonly>Arrr! I be here to sing the praises of a mighty fine candidate. What ye want to know about their skills and experience?</textarea>
+        <div id="chat-box" class="form-control chat-output" readonly>
+            <div class="assistant-response">Arrr! I be here to sing the praises of a mighty fine candidate. What ye want to know about their skills and experience?</div>
+        </div>
     </div>
     <div class="form-group">
         <input type="text" id="prompt-input" class="form-control" placeholder="Enter your message">
@@ -16,6 +18,31 @@
         <span class="sr-only">Loading...</span>
     </div>
 
+    <script src="/static/js/marked.min.js"></script>
+    <script src="/static/js/purify.min.js"></script>
+    <style>
+        .chat-output {
+            height: 400px;
+            overflow-y: auto;
+            white-space: normal;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            padding: 10px;
+        }
+        .chat-output div {
+            margin-bottom: 1.5rem;
+        }
+        .user-prompt {
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .assistant-response strong { color: #d10000; }
+        .assistant-response em { font-style: italic; }
+        .assistant-response a { color: #007bff; text-decoration: underline; }
+        .assistant-response ul { list-style-type: '☠️ '; padding-left: 1.5rem; }
+        .assistant-response li { margin-bottom: 0.5rem; }
+    </style>
     <script>window.jQuery || document.write('<script src="/static/js/jquery-3.5.1.min.js"><\/script>')</script>
     <script>
         if (typeof jQuery === 'undefined') {
@@ -47,11 +74,13 @@
                     console.log("Received response: " + data.response);
                     if (data.response) {
                         console.log("Appending response to chat box: " + data.response);
-                        var currentContent = $('#chat-box').val();
-                        // Ensure we only add new content that isn't already present
-                        if (!currentContent.includes(data.response)) {
-                            $('#chat-box').val(currentContent + '\n\n' + data.response + '\n\n');
-                        }
+                        // Convert markdown to HTML and sanitize it
+                        var cleanHtml = DOMPurify.sanitize(marked.parse(data.response));
+                        // Append new content with proper formatting
+                        $('#chat-box').append(
+                            '<div class="user-prompt">' + prompt + '</div>' +
+                            '<div class="assistant-response">' + cleanHtml + '</div>'
+                        );
                         $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                         $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                     } else {
