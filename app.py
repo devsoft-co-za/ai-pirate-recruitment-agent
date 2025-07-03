@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify, session
+from flask_session import Session  # Add server-side session support
 from api_secrets import DEEPSEEK_API_KEY, SESSION_SECRET_KEY, resume_details
 from openai import OpenAI
 import httpx
@@ -8,7 +9,15 @@ import time
 
 app = Flask(__name__)
 app.secret_key = SESSION_SECRET_KEY
-app.config['SESSION_TYPE'] = 'filesystem'  # Use server-side sessions instead of cookies
+# Configure server-side sessions
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_FILE_DIR'] = '/var/lib/flask-sessions'
+app.config['SESSION_COOKIE_NAME'] = 'pirate_session'
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SECURE'] = True
+
+# Initialize session extension
+Session(app)
 
 client = OpenAI(
     api_key=DEEPSEEK_API_KEY,
@@ -93,9 +102,12 @@ def index():
             logging.info(f"API call completed in {end_time - start_time:.2f} seconds")
             logging.debug(f"API response: {full_response}")
 
-            # Update conversation history with assistant's response (keep only last 3 messages)
+            # Update conversation history with assistant's response (keep system prompt + last 2 exchanges)
             conversation_history.append({"role": "assistant", "content": full_response})
-            conversation_history = conversation_history[-3:]  # Keep only last 3 exchanges
+            # Preserve system prompt and keep only last 2 exchanges
+            system_prompt = conversation_history[0]
+            recent_history = conversation_history[-2:]
+            conversation_history = [system_prompt] + recent_history
             
             # Save updated history and counter back to session
             session['conversation_history'] = conversation_history
