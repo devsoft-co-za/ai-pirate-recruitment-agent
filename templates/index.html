@@ -14,9 +14,6 @@
         <input type="text" id="prompt-input" class="form-control" placeholder="Enter your message">
     </div>
     <button id="send-button" class="btn btn-primary">Send</button>
-    <div class="spinner-border text-primary" role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
 
     <script src="/static/js/marked.min.js"></script>
     <script src="/static/js/purify.min.js"></script>
@@ -68,7 +65,7 @@
                 $('#chat-box').val(currentContent + '\n\n' + prompt + '\n\n');
                 $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                 $('#prompt-input').val('');
-                $('.spinner-border').show();
+                $('#pirate-overlay').show();
 
                 $.post('/', {prompt: prompt}, function(data) {
                     console.log("Received response: " + data.response);
@@ -89,7 +86,7 @@
                     if (data.response === "I be needin' a grog break!") {
                         $('#chat-box').val("Arrr! Fresh from the galley - ask about the candidate's talents!");
                     }
-                    $('.spinner-border').hide();
+                    $('#pirate-overlay').hide();
                 }).fail(function(jqXHR, textStatus, errorThrown) {
                     console.error("Request failed: " + textStatus + ", " + errorThrown);
                     var errorMsg = "Parrot navigation failure! ";
@@ -100,7 +97,7 @@
                     }
                     var currentContent = $('#chat-box').val();
                     $('#chat-box').val(currentContent + '\n\n' + errorMsg + '\n\n');
-                    $('.spinner-border').hide();
+                    $('#pirate-overlay').hide();
                 });
             }
         });
