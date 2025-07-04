@@ -76,7 +76,7 @@ uv pip install -r requirements.txt
 # Run development server
 flask run --host=0.0.0.0 --port=5000
 
-**Note:** The session directory (`/var/lib/flask-sessions`) needs to exist before running the app. The above commands create it with proper permissions for your user.
+**Note:** The session directory (`/var/lib/flask-sessions`) needs to exist before running the app. 
 ```
 
 
