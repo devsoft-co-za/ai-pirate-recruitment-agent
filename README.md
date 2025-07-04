@@ -26,16 +26,16 @@ South African tech consultancy specializing in:
 
 ## 2. Configuration
 
-Create `api_secrets.py` with:
+- Create `api_secrets.py` with:
 ```python
 DEEPSEEK_API_KEY = "your_api_key"
 SESSION_SECRET_KEY = "your_session_secret"
 resume_details = """
-[Candidate's resume details in markdown format]
+[Candidate's resume details]
 """
-
-Update html templates with your own details
 ```
+- Update html templates with your own details
+
 
 ## 3. Getting Started
 
@@ -46,6 +46,12 @@ Update html templates with your own details
 
 ### CLI Version
 ```bash
+```bash
+# Create virtual environment
+uv venv .venv
+source .venv/bin/activate  # Linux/Mac
+# .venv\Scripts\activate  # Windows
+
 uv pip install -r requirements.txt
 python3 chat.py
 
@@ -65,10 +71,6 @@ uv pip install -r requirements.txt
 
 # Run development server
 flask run --host=0.0.0.0 --port=5000
-
-# Production deployment
-uv pip install gunicorn
-gunicorn --bind 0.0.0.0:5000 wsgi:app
 ```
 
 
