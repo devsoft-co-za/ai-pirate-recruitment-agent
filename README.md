@@ -66,11 +66,17 @@ uv venv .venv
 source .venv/bin/activate  # Linux/Mac
 # .venv\Scripts\activate  # Windows
 
+# Create session directory for Flask
+sudo mkdir -p /var/lib/flask-sessions
+sudo chown $USER:$USER /var/lib/flask-sessions
+
 # Install dependencies
 uv pip install -r requirements.txt
 
 # Run development server
 flask run --host=0.0.0.0 --port=5000
+
+**Note:** The session directory (`/var/lib/flask-sessions`) needs to exist before running the app. The above commands create it with proper permissions for your user.
 ```
 
 
