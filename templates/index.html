@@ -65,7 +65,7 @@
                 $('#chat-box').val(currentContent + '\n\n' + prompt + '\n\n');
                 $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                 $('#prompt-input').val('');
-                $('#pirate-overlay').show(); // Update the pirate-overlay so that the pirate is centered, do this here OR in the base.html (or both?) AI!
+                $('#pirate-overlay').show();
 
                 $.post('/', {prompt: prompt}, function(data) {
                     console.log("Received response: " + data.response);
